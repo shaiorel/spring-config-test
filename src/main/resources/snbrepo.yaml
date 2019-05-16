@@ -1,0 +1,35 @@
+---
+bean-definitions:
+  snbrepo:
+    snbrepo.fitmentCombinationValidator:
+      beanName: fitmentCombinationValidatorImpl
+      subBeanDef: snbrepo.fitmentServiceClient
+
+    snbrepo.fitmentServiceClient:
+      beanName: normalizedFitmentServiceClient
+      params:
+        endpoint: http://api4-int.qa.ebay.com
+
+    snbrepo.aspectServiceClient:
+      beanName: aspectServiceClientImpl
+      params:
+        endpoint: catmeta.qa.ebay.com
+        readTimeOut: 60000
+
+    snbrepo.aspectCombinationValidator:
+      beanName: motorsCompatibleAspectCombinationValidator
+      subBeanDef: snbrepo.aspectServiceClient
+
+    snbrepo.categoryValidator:
+      beanName: categoryValidatorImpl
+      subBeanDef: snbrepo.categoryValidationClient
+
+    snbrepo.categoryValidationClient:
+      beanName: mysqlCategoryValidationClient
+
+    snbrepo.empConnector:
+      beanName: neoHttpEMPConnector
+      params:
+        url: docker-local
+        username: neo4j
+        password: password

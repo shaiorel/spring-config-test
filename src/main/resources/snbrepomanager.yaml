@@ -1,0 +1,326 @@
+---
+bean-definitions:
+  snbrepomanager:
+    producer.PotentialUpdateTopic:
+      beanName: snBProducerService
+      subBeanDef: trackerMessageProducer.PotentialUpdateTopic
+    trackerMessageProducer.PotentialUpdateTopic:
+      beanName: trackerProducer
+      subBeanDef: rheosproducer.PotentialUpdateTopic
+      params:
+        topic.name: PotentialUpdateTopic
+        component: snbrepo
+        tracker.producer.bean.name: JdbcProducer
+        writeMessage: 'true'
+    rheosproducer.PotentialUpdateTopic:
+      beanName: rheosProducer
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        retry.limit: 2
+        topic.name: misc.ha.PotentialUpdateGroup.PotentialUpdateTopicBeta
+        producer.name: misc.ha.PotentialUpdateGroup.potentialUpdate.producer.beta
+        producer.client.id: 5db5ef5b-dee8-457a-a140-c9bdfcc21913
+        topic.schema.name: SnbSchema
+
+    producer.NodeChangedTopic:
+      beanName: snBProducerService
+      subBeanDef: trackerMessageProducer.NodeChangedTopic
+      params: {}
+    trackerMessageProducer.NodeChangedTopic:
+      beanName: trackerProducer
+      subBeanDef: rheosproducer.NodeChangedTopic
+      params:
+        topic.name: NodeChangedTopicBeta
+        component: snbrepo
+        tracker.producer.bean.name: JdbcProducer
+        writeMessage: 'true'
+    rheosproducer.NodeChangedTopic:
+      beanName: rheosProducer
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        retry.limit: '2'
+        topic.name: misc.ha.NodeChangedGroup.NodeChangedTopicBeta
+        producer.name: misc.ha.NodeChangedGroup.nodeChanged.producer.beta
+        producer.client.id: 378ae7dc-c53c-4249-b411-643a77408701
+        topic.schema.name: SnbSchema
+
+    snbrepo.consumer.SignalsTopic:
+      beanName: snBConsumerService
+      subBeanDef: snbrepo.trackerMessagePuller.SignalsTopic
+      params:
+        number.of.consumers: '2'
+        max.failed.executions: '0'
+        max.processing.size: '10'
+    snbrepo.trackerMessagePuller.SignalsTopic:
+      beanName: trackerPuller
+      subBeanDef: snbrepo.puller.SignalsTopic
+      params:
+        topic.name: SignalsTopicBeta
+        component: snbrepo
+        tracker.producer.bean.name: JdbcProducer
+        writeMessage: 'true'
+        tracker.msg.fetcher.bean.name: trackerFetcher
+        filter.duplicate: 'true'
+    snbrepo.puller.SignalsTopic:
+      beanName: rheosPuller
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        topic.name: misc.ha.SignalsGroup.SignalsTopicBeta
+        consumer.group.name: Signals.snbrepo.beta
+        consumer.client.id: b678964a-f6dc-4e10-beb9-2de325508079
+        consumer.producer.name: rheosproducer.SignalsTopic
+        max.partition.fetch.bytes: 1638400
+        receive.buffer: 6553600
+        max.poll.records: 100
+
+    snbrepo.consumer.ExternalUpdateNodeTopic:
+      beanName: snBConsumerService
+      subBeanDef: snbrepo.trackerMessagePuller.ExternalUpdateNodeTopic
+      params:
+        number.of.consumers: '2'
+        max.failed.executions: '0'
+        max.processing.size: '10'
+    snbrepo.trackerMessagePuller.ExternalUpdateNodeTopic:
+      beanName: trackerPuller
+      subBeanDef: snbrepo.puller.ExternalUpdateNodeTopic
+      params:
+        topic.name: ExternalUpdateNodeTopicBeta
+        component: snbrepo
+        tracker.producer.bean.name: JdbcProducer
+        writeMessage: 'true'
+        tracker.msg.fetcher.bean.name: trackerFetcher
+        filter.duplicate: 'true'
+    snbrepo.puller.ExternalUpdateNodeTopic:
+      beanName: rheosPuller
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        topic.name: misc.ha.ExternalUpdateNodeGroup.UpdateNodeTopicBeta
+        consumer.group.name: external.UpdateNode.snbrepo.beta
+        consumer.client.id: 1f1f8c0a-a6ca-4473-ba43-c8c867381edf
+        consumer.producer.name: rheosproducer.ExternalUpdateNode
+        max.partition.fetch.bytes: 1638400
+        receive.buffer: 6553600
+        max.poll.records: 100
+
+    snbrepo.consumer.GraduatedTopic:
+      beanName: snBConsumerService
+      subBeanDef: snbrepo.trackerMessagePuller.GraduatedTopic
+      params:
+        number.of.consumers: '2'
+        max.failed.executions: '0'
+        max.processing.size: '10'
+    snbrepo.trackerMessagePuller.GraduatedTopic:
+      beanName: trackerPuller
+      subBeanDef: snbrepo.puller.GraduatedTopic
+      params:
+        topic.name: GraduatedTopicBeta
+        component: snbrepo
+        tracker.producer.bean.name: JdbcProducer
+        writeMessage: 'true'
+        tracker.msg.fetcher.bean.name: trackerFetcher
+        filter.duplicate: 'true'
+    snbrepo.puller.GraduatedTopic:
+      beanName: rheosPuller
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        topic.name: misc.ha.GraduatedGroup.GraduatedTopicBeta
+        consumer.group.name: Graduated.snbrepo.beta
+        consumer.client.id: d1fe8dc1-463e-4d8a-a3ba-51c1ea786199
+        consumer.producer.name: rheosproducer.GraduatedTopic
+        max.partition.fetch.bytes: 1638400
+        receive.buffer: 6553600
+        max.poll.records: 100
+
+    snbrepo.consumer.UpdateNodeTopic:
+      beanName: snBConsumerService
+      subBeanDef: snbrepo.trackerMessagePuller.UpdateNodeTopic
+      params:
+        number.of.consumers: '2'
+        max.failed.executions: '0'
+        max.processing.size: '10'
+    snbrepo.trackerMessagePuller.UpdateNodeTopic:
+      beanName: trackerPuller
+      subBeanDef: snbrepo.puller.UpdateNodeTopic
+      params:
+        topic.name: UpdateNodeTopicBeta
+        component: snbrepo
+        tracker.producer.bean.name: JdbcProducer
+        writeMessage: 'true'
+        tracker.msg.fetcher.bean.name: trackerFetcher
+        filter.duplicate: 'true'
+    snbrepo.puller.UpdateNodeTopic:
+      beanName: rheosPuller
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        topic.name: misc.ha.UpdateNodeGroup.UpdateNodeTopicBeta
+        consumer.group.name: UpdateNode.snbrepo.beta
+        consumer.client.id: 5710c70b-c588-49a6-8ac9-3809fb56bfe6
+        consumer.producer.name: rheosproducer.UpdateNodeTopic
+        max.partition.fetch.bytes: 1638400
+        receive.buffer: 6553600
+        max.poll.records: 100
+
+    producer.SignalsTopic:
+      beanName: snBProducerService
+      subBeanDef: trackerMessageProducer.SignalsTopic
+    trackerMessageProducer.SignalsTopic:
+      beanName: trackerProducer
+      subBeanDef: rheosproducer.SignalsTopic
+      params:
+        topic.name: SignalsTopicBeta
+        component: snbcenter
+        tracker.producer.bean.name: JdbcProducer
+    rheosproducer.SignalsTopic:
+      beanName: rheosProducer
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        retry.limit: 2
+        topic.name: misc.ha.SignalsGroup.SignalsTopicBeta
+        producer.name: misc.ha.SignalsGroup.signals.producer.beta
+        producer.client.id: 0d1d5f16-3799-4293-b8bd-d25bfcff1634
+        topic.schema.name: SnbSchema
+
+    rheosproducer.ExternalUpdateNode:
+      beanName: rheosProducer
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        retry.limit: 2
+        topic.name: misc.ha.ExternalUpdateNodeGroup.UpdateNodeTopicBeta
+        producer.name: misc.ha.ExternalUpdateNodeGroup.external.updateNode.producer.beta
+        producer.client.id: 6ab25812-1690-4101-a3cd-4ba18255144a
+        topic.schema.name: SnbSchema
+
+    rheosproducer.UpdateNodeTopic:
+      beanName: rheosProducer
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        retry.limit: 2
+        topic.name: misc.ha.UpdateNodeGroup.UpdateNodeTopicBeta
+        producer.name: misc.ha.UpdateNodeGroup.updateNode.producer.beta
+        producer.client.id: eaf4bf5c-0fa4-489f-b6a3-df6e2366b4a7
+        topic.schema.name: SnbSchema
+
+    rheosproducer.GraduatedTopic:
+      beanName: rheosProducer
+      params:
+        kafka.bootstrap.servers:
+          rheos-kafka-proxy-1.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.lvs02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-1.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-2.phx02.dev.ebayc3.com:9092,
+          rheos-kafka-proxy-3.phx02.dev.ebayc3.com:9092
+        retry.limit: 2
+        topic.name: misc.ha.GraduatedGroup.GraduatedTopicBeta
+        producer.name: misc.ha.GraduatedGroup.graduated.producer.beta
+        producer.client.id: 0c9f0c97-8ab8-411d-a32a-5863ddd0cf4e
+        topic.schema.name: SnbSchema
+
+    snbrepo.manager.client:
+      beanName: repoRestClientImpl
+      params:
+        endpoint: snbrepo-stg.qa.ebay.com:80
+        readTimeOut: '60000'
+        connectionTimeout: '60000'
+
+    snbrepo.manager.getNodeRepoClient:
+      beanName: getNodeRepoClientV3Impl
+      params:
+        endpoint: snbrepo-stg.qa.ebay.com:80
+        readTimeOut: '60000'
+        connectionTimeout: '60000'
+
+    snbrepo.manager.getNodeRepoClientV1:
+      beanName: getNodeRepoClientV1Impl
+      params:
+        endpoint: snbrepo-stg.qa.ebay.com:80
+        readTimeOut: '60000'
+        connectionTimeout: '60000'
+
+    snbrepo.manager.metadata.client:
+      beanName: metadataRestClientImpl
+      params:
+        endpoint: snbrepo-stg.qa.ebay.com:80
+        readTimeOut: '60000'
+        connectionTimeout: '60000'
+
+    snbrepo.manager.get.node.tokens:
+      beanName: getNodeRepoClientWithTokensImpl
+      params:
+        endpoint: snbrepo-stg.qa.ebay.com:80
+        readTimeOut: '60000'
+        connectionTimeout: '60000'
+
+    JdbcProducer:
+      beanName: jdbcProducer
+      params:
+        db.url: jdbc:mysql://mysnb.db.dev.ebayc3.com/snb_beta?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf8&connectionCollation=utf8_bin&rewriteBatchedStatements=true
+        db.username: snb_beta
+        db.password: snb_beta
+
+    TrackerFetcher:
+      beanName: trackerMessageFetcher
+      params:
+        db.url: jdbc:mysql://mysnb.db.dev.ebayc3.com/snb_beta?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf8&connectionCollation=utf8_bin&rewriteBatchedStatements=true
+        db.username: snb_beta
+        db.password: snb_beta
+
+configuration:
+  snbrepomanager:
+    secret.key:
+      content: secret-beta
+      content_type: 5
